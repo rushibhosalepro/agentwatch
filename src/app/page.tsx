@@ -157,23 +157,26 @@ export default function Home() {
     })
   }, [])
 
-  // Poll live transcript while a session is active
+  // Poll live transcript — uses sessionId if we created one locally,
+  // otherwise falls back to /api/session (which returns the latest session
+  // including any session UiPath agents created via MCP)
   useEffect(() => {
-    if (!sessionId) return
+    if (!run) return
     let cancelled = false
     const poll = async () => {
       if (cancelled) return
       try {
-        const r = await fetch(`/api/session?sessionId=${sessionId}`)
+        const url = sessionId ? `/api/session?sessionId=${sessionId}` : '/api/session'
+        const r = await fetch(url)
         if (!r.ok || cancelled) return
         const data = await r.json() as { transcript?: LiveMessage[] }
-        if (data.transcript) setLiveMessages(data.transcript)
+        if (data.transcript && data.transcript.length > 0) setLiveMessages(data.transcript)
       } catch { /* ignore */ }
       if (!cancelled) setTimeout(poll, 3000)
     }
     poll()
     return () => { cancelled = true }
-  }, [sessionId])
+  }, [run, sessionId])
 
   const addTrail = useCallback((text: string, color: DotColor) => {
     setRun(prev => prev ? { ...prev, trail: [...prev.trail, { text, color, time: now() }] } : prev)
