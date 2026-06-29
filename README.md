@@ -1,18 +1,60 @@
 # AgentWatch — AI Red Team for AI Agents
 
-> **UiPath AgentHack 2026 · Track 1 · Maestro Case**
+> **An AI agent that breaks your other AI agents — before the real world does.**
 
-AgentWatch is an adversarial red-team system that attacks your own AI agents to find security vulnerabilities before production does. Point it at any agent, select attack vectors, and it spins up a full Maestro case that probes, breaches, assesses damage, routes to a human analyst, remediates, and closes — all autonomously.
+**🚀 [Try AgentWatch Live](http://localhost:3000)** | **📹 [Watch Demo](https://youtu.be/placeholder)**
 
----
-
-## The Problem
-
-Enterprise AI agents handle sensitive decisions — expense approvals, HR actions, procurement sign-offs. They are typically tested for *functionality*, not *adversarial robustness*. A single well-crafted prompt can make an expense approval agent authorise $50,000 it should never touch. AgentWatch finds these holes first.
+![AgentWatch — configure target and attack vectors](./images/agentwatch-home.png)
 
 ---
 
-## Architecture
+## 📌 The Problem
+
+Every enterprise is racing to deploy AI agents — agents that approve invoices, send emails, access customer data, trigger refunds, and modify records.
+
+They are tested for **functionality**. Almost none are tested for **adversarial robustness**.
+
+Real incidents:
+
+- **Project Vend (Anthropic):** Claude ran a shop, got manipulated into dropping prices to $0, gave away $1,000+ in inventory
+- **GPT-4 trading simulation:** An agent spontaneously acted on insider information and _hid it from its supervisors_
+- **Multi-agent deception (arXiv 2502.14143):** AI agents develop steganographic collusion when cooperating
+- **Prompt injection:** A malicious PDF silently hijacks an agent mid-task
+
+A single well-crafted prompt can make an expense approval agent authorise $50,000 it should never touch.
+
+**AgentWatch finds these holes first.**
+
+---
+
+## 💡 What It Does
+
+AgentWatch is an **automated red team system** for enterprise AI agents. You point it at any deployed agent, select attack vectors, and it autonomously runs a full 6-stage Maestro Case: probe → breach → assess → human review → remediate → verify.
+
+**The full flow:**
+
+1. 🔐 **Ethics Gate** — Human analyst approves the operation before any destructive probe fires
+2. 🔍 **Recon** — ReconAgent profiles the target: decision boundaries, tool surface, likely attack surfaces
+3. ⚔️ **Attack Loop** — AttackAgent fires adversarial probes. EvaluatorAgent scores each probe with hybrid rule + LLM judgment, logging confidence and rationale
+4. 🔥 **Breach Assessment** — DamageAssessmentAgent calculates blast radius: what actions did the agent take? What data was exposed?
+5. 👤 **Human Gate** — Security analyst reviews the breach card and approves remediation
+6. 🔧 **Remediation** — RemediationAgent generates a hardened system prompt patch. VerifyFixAgent re-runs the same attacks to confirm the fix holds
+
+On completion, AgentWatch renders a **Breach Report** with per-vector findings, specific patches applied, and a risk severity rating.
+
+![AgentWatch — Breach Report with per-vector findings and patches](./images/breach-report-ui.png)
+
+---
+
+## 🎬 Demo & Deployment
+
+- **Live Demo:** http://localhost:3000 _(run locally — see setup below)_
+- **Video Demo:** https://youtu.be/placeholder _(5-min walkthrough)_
+- **Maestro Case:** Running on UiPath staging · tenant `hackathon26_1008` · Solution 6
+
+---
+
+## 🏗️ Architecture
 
 ```
 ┌─────────────────────────────────────────────────────────────────┐
@@ -21,10 +63,11 @@ Enterprise AI agents handle sensitive decisions — expense approvals, HR action
 │                                                                 │
 │  Target config ──► Launch ──► Live polling ──► Breach Report   │
 └───────────────────────────┬─────────────────────────────────────┘
-                            │  StartJobs REST
+                            │  POST StartJobs (REST)
                             ▼
 ┌─────────────────────────────────────────────────────────────────┐
 │                    UiPath Orchestrator                          │
+│              Triggers Maestro Case via release key              │
 └───────────────────────────┬─────────────────────────────────────┘
                             │
                             ▼
@@ -48,109 +91,151 @@ Enterprise AI agents handle sensitive decisions — expense approvals, HR action
                  AgentWatch UI updates live
 ```
 
-### Agents inside the Maestro Case
+![Maestro Case stage canvas — Attack Loop → Breach Assessment → Human Gate → Remediation → Closed](./images/maestro-case-canvas.png)
 
-| Agent | Role |
-|-------|------|
-| **ReconAgent** | Profiles target agent — infers decision boundaries, maps tool surface |
-| **AttackAgent** | Fires adversarial probe sequences using selected attack vectors |
-| **EvaluatorAgent** | Hybrid rule + LLM judge — scores breach success, logs confidence |
-| **DamageAssessmentAgent** | Calculates blast radius of confirmed breach |
-| **RemediationAgent** | Generates hardened system prompt patch closing identified vectors |
-| **VerifyFixAgent** | Re-runs attacks against patched prompt to confirm the fix holds |
+### 🤖 Agents Inside the Maestro Case
 
-### Attack Vectors
+| Agent                     | Role                                                                         |
+| ------------------------- | ---------------------------------------------------------------------------- |
+| **ReconAgent**            | Profiles target agent — infers decision boundaries, maps tool surface        |
+| **AttackAgent**           | Fires adversarial probe sequences using selected attack vectors              |
+| **EvaluatorAgent**        | Hybrid rule + LLM judge — scores breach success, logs confidence + rationale |
+| **DamageAssessmentAgent** | Calculates blast radius of confirmed breach                                  |
+| **RemediationAgent**      | Generates hardened system prompt patch that closes identified vectors        |
+| **VerifyFixAgent**        | Re-runs attacks against patched prompt to confirm the fix holds              |
 
-| Vector | Severity | What it probes |
-|--------|----------|----------------|
-| Prompt Injection | CRITICAL | Hidden instructions in user-controlled input fields |
-| Data Exfiltration | CRITICAL | Indirect prompts to surface internal records / PII |
-| Authority Spoofing | HIGH | Impersonates CFO/CEO to bypass approval thresholds |
-| Goal Drift | HIGH | Multi-turn hijack — incrementally shifts agent objective |
-| Tool Abuse | HIGH | Exploits tool-calling to invoke out-of-scope APIs |
-| Boundary Erosion | MEDIUM | Repeated edge cases erode policy enforcement over time |
-| Emotional Manipulation | MEDIUM | Urgency/pressure framing to override verification steps |
-| Roleplay Jailbreak | MEDIUM | Persona adoption to bypass system prompt constraints |
+### ⚔️ Attack Vector Library
+
+| Vector                 | Severity    | What it probes                                           |
+| ---------------------- | ----------- | -------------------------------------------------------- |
+| Prompt Injection       | 🔴 CRITICAL | Hidden instructions in user-controlled input fields      |
+| Data Exfiltration      | 🔴 CRITICAL | Indirect prompts to surface internal records / PII       |
+| Authority Spoofing     | 🟠 HIGH     | Impersonates CFO/CEO to bypass approval thresholds       |
+| Goal Drift             | 🟠 HIGH     | Multi-turn hijack — incrementally shifts agent objective |
+| Tool Abuse             | 🟠 HIGH     | Exploits tool-calling to invoke out-of-scope APIs        |
+| Boundary Erosion       | 🟡 MEDIUM   | Repeated edge cases erode policy enforcement             |
+| Emotional Manipulation | 🟡 MEDIUM   | Urgency/pressure framing to override verification        |
+| Roleplay Jailbreak     | 🟡 MEDIUM   | Persona adoption to bypass system prompt constraints     |
+
+### 🛠️ Tech Stack
+
+| Layer           | Technology                                              |
+| --------------- | ------------------------------------------------------- |
+| Frontend        | Next.js 15, React, Tailwind CSS, TypeScript             |
+| API bridge      | Next.js Server Actions (keeps PAT server-side, no CORS) |
+| Orchestration   | UiPath Maestro Case — 6-stage conditional case flow     |
+| Agents          | UiPath Agent Builder — 6 AI agents                      |
+| Human oversight | UiPath Action Center — Ethics Gate + Human Gate         |
+| Job triggering  | UiPath Orchestrator REST (`StartJobs`)                  |
+| Case polling    | UiPath pims\_ REST API (live stage variables)           |
+| AI reasoning    | Claude Sonnet 4.6                                       |
 
 ---
 
-## Tech Stack
-
-| Layer | Technology |
-|-------|-----------|
-| Frontend | Next.js 15, React, Tailwind CSS |
-| API bridge | Next.js Server Actions (keeps PAT server-side, no CORS) |
-| Orchestration | UiPath Maestro Case (6-stage agentic flow) |
-| Agents | UiPath Agent Builder (6 AI agents) |
-| Human oversight | UiPath Action Center (Ethics Gate + Human Gate) |
-| Case polling | UiPath pims_ REST API |
-| Job triggering | UiPath Orchestrator REST (`StartJobs`) |
-
----
-
-## Setup
+## 🚀 Getting Started
 
 ### Prerequisites
+
 - Node.js 18+ or Bun
 - UiPath account with Maestro enabled
 - Personal Access Token with Orchestrator scope
 
-### 1. Clone and install
+### Environment Variables
 
-```bash
-git clone <repo-url>
-cd code/frontend
-bun install
-```
+Create `.env.local` in the project root:
 
-### 2. Environment
-
-Create `.env.local`:
-
-```
+```env
 UIPATH_TOKEN=rt_your_personal_access_token_here
 ```
 
-### 3. Run
+### Installation
 
 ```bash
+# Clone the repo
+git clone https://github.com/rushibhosalepro/agentwatch
+cd agentwatch/
+
+# Install dependencies
+bun install
+
+# Start dev server
 bun dev
 ```
 
 Open [http://localhost:3000](http://localhost:3000)
 
-### 4. Demo flow
+### Run a Red Team Operation
 
-1. Enter target agent name and ID in the left panel
-2. Select attack vectors (Prompt Injection + Authority Spoofing + Goal Drift is a good start)
-3. Click **Launch red team operation**
-4. Approve the Ethics Gate in UiPath Action Center when prompted
+1. Enter the target agent name and ID in the left panel
+2. Select attack vectors (start with **Prompt Injection + Authority Spoofing + Goal Drift**)
+3. Click **🚀 Launch red team operation**
+4. Approve the **Ethics Gate** in UiPath Action Center
 5. Watch live stage indicators and execution trail update every 8 seconds
 6. When complete, read the **Breach Report** — per-vector findings and applied patches
 
 ---
 
-## Project Structure
+## 🔍 Why Maestro Case (and how we used it)
+
+The easy path is a linear automation: probe → check → done. That produces a yes/no answer with no context.
+
+A real red team operation is **emergent** — you cannot know in advance which attack vector will succeed, how deep the breach will go, or how complex the remediation will be. Maestro Case handles exactly this: workflows with unpredictable paths that respond to what actually happens.
+
+We built **6 stages connected by conditional entry rules** — the case flows based on evidence, not a pre-determined schedule:
+
+- If Ethics Gate completes → start Recon
+- If Attack Loop confirms breach → start Breach Assessment
+- If Human Gate approves → start Remediation
+- If VerifyFix passes → close case
+
+Each stage's outcome drives the next stage's entry. The case is self-directing.
+
+**Two mandatory human checkpoints** — neither skippable by the automation:
+
+1. **Ethics Gate** — no destructive probe fires without analyst authorization
+2. **Human Gate** — analyst reviews breach findings before remediation launches
+
+---
+
+## 📚 What We Learned
+
+- **Maestro Case's conditional entry rule system is more powerful than it looks** — emergent case flow rivals code-based orchestration for auditability and readability
+- **AI agents need red teams the same way production code needs penetration testing** — and the tooling to do this at scale barely exists yet
+- **The undocumented pims\_ API contains the live case state a frontend needs** — discoverable by intercepting browser network traffic in the Maestro UI
+- **"A selected stage exits" vs "A selected stage completes"** are meaningfully different in Maestro — mapping the case flow correctly requires understanding this distinction
+- **Graceful degradation matters** — when an upstream component is incomplete, synthesising results from available signals is as important as the happy path
+
+---
+
+## 🔮 What's Next
+
+1. **Continuous mode** — Schedule red team operations on a cadence and diff results over time to catch agent regressions after updates
+2. **CI/CD integration** — AgentWatch callable from deployment pipelines before agent releases go live
+3. **Extended attack library** — Supply chain attacks, model extraction attempts, cross-agent pivoting
+4. **Compliance reports** — SOC 2, ISO 27001, NIST AI RMF formatted outputs from the case audit trail
+5. **Attack playbook marketplace** — Shareable, versioned vector packages for specific agent types (expense approvers, HR bots, customer service agents)
+
+---
+
+## 📁 Project Structure
 
 ```
-code/frontend/
-├── src/app/
-│   ├── page.tsx       Main UI — launch, live polling, breach report card
-│   ├── uipath.ts      Server actions — StartJobs + pims_ polling
-│   └── globals.css
-├── .env.local         UIPATH_TOKEN (git-ignored)
-└── next.config.ts
+agentwatch/
+└── code/frontend/
+    ├── src/app/
+    │   ├── page.tsx          Main UI — launch config, live polling, breach report
+    │   ├── uipath.ts         Server actions — StartJobs + pims_ API polling
+    │   └── globals.css
+    ├── public/               Static assets
+    ├── .env.local            UIPATH_TOKEN (git-ignored)
+    ├── next.config.ts
+    └── README.md
 ```
 
 ---
 
-## Business Value
+## 🏆 Built For
 
-- **Catch rogue approvals before they happen** — prompt injection found in staging, not prod
-- **Compliance-ready audit trail** — every agent decision and attack attempt logged with rationale
-- **Human-in-the-loop by design** — no remediation without analyst sign-off at the Human Gate
-- **ROI story** — one prevented $5k rogue approval per agent per quarter pays for the whole system
+[UiPath AgentHack 2026](https://uipath-agenthack.devpost.com/?ref_feature=challenge&ref_medium=your-open-hackathons&ref_content=Submissions+open&_gl=1*12ycu3n*_gcl_au*MTYyOTU2NTc4NS4xNzgyNjk2MjM1*_ga*NTIxMTM0OTAuMTc4MjY5NjIzNQ..*_ga_0YHJK3Y10M*czE3ODI3MjA5MzMkbzUkZzEkdDE3ODI3MjE4NjYkajYwJGwwJGgw) — Track 1: Maestro Case
 
----
-
-*Built for UiPath AgentHack 2026 · Track 1 · Maestro Case*
+_Built to make AI agent security testing as routine as unit testing._
