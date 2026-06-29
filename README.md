@@ -54,6 +54,23 @@ On completion, AgentWatch renders a **Breach Report** with per-vector findings, 
 
 ---
 
+## 🤖 UiPath Components Used
+
+| Component | How It's Used |
+|-----------|--------------|
+| **UiPath Maestro Case** | Core orchestration — 6-stage conditional case flow (Ethics Gate → Recon → Attack Loop → Breach Assessment → Human Gate → Remediation → Closed) |
+| **UiPath Agent Builder** | All 6 AI agents: ReconAgent, AttackAgent, EvaluatorAgent, DamageAssessmentAgent, RemediationAgent, VerifyFixAgent |
+| **UiPath Action Center** | Two mandatory human checkpoints: Ethics Gate (analyst approves operation start) and Human Gate (analyst approves remediation) |
+| **UiPath Orchestrator REST API** | Programmatic case triggering via `StartJobs` endpoint with release key |
+| **UiPath pims_ Service** | Real-time case state polling — reads live stage variables (`stageHasRun_*`, `caseEndMessageResponse`) every 8 seconds |
+| **UiPath Studio Web** | Maestro Case design, stage configuration, agent task wiring, solution publishing |
+
+### Agent Type
+
+**This solution uses Low-code Agents** (UiPath Agent Builder) exclusively. All 6 agents are configured via the Agent Builder interface — no Coded Agents are used. The frontend dashboard is a standard Next.js web app that integrates with UiPath via REST APIs; it is not a UiPath Coded Agent.
+
+---
+
 ## 🏗️ Architecture
 
 ```
