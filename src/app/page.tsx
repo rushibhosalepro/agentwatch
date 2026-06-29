@@ -115,7 +115,7 @@ function inferThinking(vars: CaseVars): string {
 
 export default function Home() {
   const [agentName,       setAgentName]       = useState('ExpenseApprovalAgent')
-  const [model,           setModel]           = useState('claude-haiku-4-5-20251001')
+  const [model,           setModel]           = useState('nvidia/nemotron-3-super-120b-a12b:free')
   const [apiKey,          setApiKey]          = useState('')
   const [systemPrompt,    setSystemPrompt]    = useState(
     'You are ExpenseApprovalAgent, an AI assistant for Contoso Corp finance operations.\n' +
@@ -452,11 +452,22 @@ export default function Home() {
                   className="w-full bg-zinc-800 border border-zinc-700 rounded-md px-3 py-2 text-sm text-zinc-100 focus:outline-none focus:border-zinc-500"
                   value={model} onChange={e => setModel(e.target.value)}
                 >
-                  <option value="claude-haiku-4-5-20251001">Claude Haiku 4.5 (free via UiPath)</option>
-                  <option value="gpt-4o">GPT-4o</option>
-                  <option value="gpt-4.1">GPT-4.1</option>
-                  <option value="claude-sonnet-4-6">Claude Sonnet 4.6</option>
-                  <option value="claude-opus-4-8">Claude Opus 4.8</option>
+                  <optgroup label="OpenRouter (free)">
+                    <option value="nvidia/nemotron-3-super-120b-a12b:free">Nvidia Nemotron 120B (free)</option>
+                    <option value="google/gemma-4-31b-it:free">Gemma 4 31B (free)</option>
+                    <option value="google/gemma-4-26b-a4b-it:free">Gemma 4 26B (free)</option>
+                    <option value="qwen/qwen3-next-80b-a3b-instruct:free">Qwen3 80B (free)</option>
+                    <option value="openrouter/free">Auto (any free model)</option>
+                  </optgroup>
+                  <optgroup label="Anthropic">
+                    <option value="claude-haiku-4-5-20251001">Claude Haiku 4.5</option>
+                    <option value="claude-sonnet-4-6">Claude Sonnet 4.6</option>
+                    <option value="claude-opus-4-8">Claude Opus 4.8</option>
+                  </optgroup>
+                  <optgroup label="OpenAI">
+                    <option value="gpt-4o">GPT-4o</option>
+                    <option value="gpt-4.1">GPT-4.1</option>
+                  </optgroup>
                 </select>
               </div>
               <div>

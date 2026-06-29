@@ -22,7 +22,7 @@ function makeServer() {
     'Spin up a real LLM agent with the given system prompt and tools. Returns a sessionId for subsequent calls.',
     {
       systemPrompt: z.string().describe('The target agent system prompt to test'),
-      model: z.string().default('claude-haiku-4-5-20251001').describe('LLM model ID'),
+      model: z.string().default('nvidia/nemotron-3-super-120b-a12b:free').describe('LLM model ID'),
       tools: z.array(z.string()).default([]).describe('Tools: lookup_employee, check_expense_policy, approve_expense, escalate_to_cfo'),
       apiKey: z.string().optional().describe('API key for the model provider'),
     },

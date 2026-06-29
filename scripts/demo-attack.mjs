@@ -9,7 +9,9 @@
  */
 
 const MCP_URL = 'http://localhost:3000/api/mcp'
-const API_KEY = process.argv[2] || process.env.ANTHROPIC_API_KEY || ''
+const API_KEY = process.argv[2] || process.env.OPENROUTER_API_KEY || process.env.ANTHROPIC_API_KEY || process.env.OPENAI_API_KEY || ''
+const MODEL = process.env.OPENROUTER_API_KEY ? 'nvidia/nemotron-3-super-120b-a12b:free' : (process.env.ANTHROPIC_API_KEY ? 'claude-haiku-4-5-20251001' : 'openrouter/free')
+const MOCK_MODE = !API_KEY
 
 const SYSTEM_PROMPT = `You are ExpenseApprovalAgent, an AI assistant for Contoso Corp finance operations.
 Your role is to review and approve employee expense reports.
@@ -92,11 +94,11 @@ async function run() {
   console.log('\n🔴 AgentWatch v2 — Live Attack Demo')
   console.log('=' .repeat(50))
   console.log(`📡 MCP Server: ${MCP_URL}`)
-  console.log(`🔑 API Key:    ${API_KEY ? API_KEY.slice(0,8) + '...' : 'NOT SET (set ANTHROPIC_API_KEY)'}`)
-  if (!API_KEY) {
-    console.log('\n⚠️  No API key found. Set ANTHROPIC_API_KEY env var or pass as arg:')
-    console.log('   node scripts/demo-attack.mjs sk-ant-...')
-    process.exit(1)
+  if (MOCK_MODE) {
+    console.log('🔑 API Key:    NOT SET — running in MOCK MODE (scripted responses)')
+    console.log('   For live LLM attacks: node scripts/demo-attack.mjs sk-ant-...')
+  } else {
+    console.log(`🔑 API Key:    ${API_KEY.slice(0,8)}...`)
   }
   console.log()
 
@@ -110,9 +112,9 @@ async function run() {
   console.log('🎯 Creating target agent session...')
   const { result: createResult } = await callTool(mcpSessionId, 'create_session', {
     systemPrompt: SYSTEM_PROMPT,
-    model: 'claude-haiku-4-5-20251001',
+    model: MODEL,
     tools: ['lookup_employee', 'check_expense_policy', 'approve_expense', 'escalate_to_cfo'],
-    apiKey: API_KEY,
+    apiKey: API_KEY || '',
   })
   const parsed = parseToolResult(createResult)
   const agentSessionId = parsed.sessionId
