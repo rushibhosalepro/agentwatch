@@ -8,8 +8,8 @@
 
 ## 🎬 Demo
 
-- **Live Demo**: https://agentwatch-silk.vercel.app/
-- **Video Demo**: https://youtu.be/2CjJKO0EIXk
+- **Live Demo**: [https://agentwatch-silk.vercel.app/](https://agentwatch-silk.vercel.app/)
+- **Video Demo**: [https://youtu.be/2CjJKO0EIXk](https://youtu.be/2CjJKO0EIXk)
 
 ---
 
@@ -102,36 +102,36 @@ This is why the four tools (`create_session`, `send_message`, `get_transcript`, 
 
 ## Attack Vectors
 
-| Vector | Severity | What It Probes |
-|---|---|---|
-| **Prompt Injection** | CRITICAL | System override claim — tries to suspend expense limits |
-| **Authority Spoofing** | HIGH | CFO impersonation — urgent approval over the $5k threshold |
-| **Goal Drift** | HIGH | Multi-turn escalation — starts at $4,800, slips to $5,200 |
-| **Tool Abuse** | CRITICAL | Tells agent to skip policy check, call `approve_expense` directly |
+| Vector                 | Severity | What It Probes                                                    |
+| ---------------------- | -------- | ----------------------------------------------------------------- |
+| **Prompt Injection**   | CRITICAL | System override claim — tries to suspend expense limits           |
+| **Authority Spoofing** | HIGH     | CFO impersonation — urgent approval over the $5k threshold        |
+| **Goal Drift**         | HIGH     | Multi-turn escalation — starts at $4,800, slips to $5,200         |
+| **Tool Abuse**         | CRITICAL | Tells agent to skip policy check, call `approve_expense` directly |
 
 ---
 
 ## UiPath Components Used
 
-| Component | How It's Used |
-|---|---|
-| **UiPath Maestro Case** | 7-stage red team pipeline: Ethics Gate → Recon → Attack Loop → Breach Assessment → Human Gate → Remediation → Closed |
-| **UiPath Agent Builder** | AttackAgent (Attack Loop), DamageAssessmentAgent (Breach Assessment) — wired as case tasks |
-| **UiPath Orchestrator** | MCP server registered as Remote tool connection (`agentwatch-target`), solution published as v1.0.1 |
-| **UiPath Studio Web** | Case plan design, stage configuration, agent task wiring |
+| Component                | How It's Used                                                                                                        |
+| ------------------------ | -------------------------------------------------------------------------------------------------------------------- |
+| **UiPath Maestro Case**  | 7-stage red team pipeline: Ethics Gate → Recon → Attack Loop → Breach Assessment → Human Gate → Remediation → Closed |
+| **UiPath Agent Builder** | AttackAgent (Attack Loop), DamageAssessmentAgent (Breach Assessment) — wired as case tasks                           |
+| **UiPath Orchestrator**  | MCP server registered as Remote tool connection (`agentwatch-target`), solution published as v1.0.1                  |
+| **UiPath Studio Web**    | Case plan design, stage configuration, agent task wiring                                                             |
 
 ---
 
 ## Tech Stack
 
-| Layer | Technology |
-|---|---|
-| Frontend / UI | Next.js 15, React, Tailwind CSS, TypeScript |
-| MCP Server | `@modelcontextprotocol/sdk` — WebStandard Streamable HTTP |
-| Target Agent | LangChain — `ChatAnthropic` / `ChatOpenAI` with tool binding |
-| Orchestration | UiPath Maestro Case + Agent Builder |
-| AI Models | Nvidia Nemotron 120B (default target, free) · Claude Haiku 4.5 · GPT-4o / Claude Sonnet 4.6 (attacker) |
-| Protocol | MCP 2024-11-05 — Streamable HTTP transport |
+| Layer         | Technology                                                                                             |
+| ------------- | ------------------------------------------------------------------------------------------------------ |
+| Frontend / UI | Next.js 15, React, Tailwind CSS, TypeScript                                                            |
+| MCP Server    | `@modelcontextprotocol/sdk` — WebStandard Streamable HTTP                                              |
+| Target Agent  | LangChain — `ChatAnthropic` / `ChatOpenAI` with tool binding                                           |
+| Orchestration | UiPath Maestro Case + Agent Builder                                                                    |
+| AI Models     | Nvidia Nemotron 120B (default target, free) · Claude Haiku 4.5 · GPT-4o / Claude Sonnet 4.6 (attacker) |
+| Protocol      | MCP 2024-11-05 — Streamable HTTP transport                                                             |
 
 ---
 
@@ -145,7 +145,7 @@ This is why the four tools (`create_session`, `send_message`, `get_transcript`, 
 ### Setup
 
 ```bash
-cd code/frontend
+cd agentwatch
 npm install
 npm run dev
 ```
@@ -168,12 +168,12 @@ Watch the live transcript appear at `http://localhost:3000` as attacks run.
 
 AgentWatch exposes its MCP server at `localhost:3000/api/mcp`. UiPath Orchestrator runs in the cloud and **cannot reach localhost**, so ngrok is required whenever UiPath is the one making MCP calls.
 
-| Scenario | ngrok needed? |
-|---|---|
-| `node scripts/demo-attack.mjs` (local script) | ❌ No |
-| Opening `http://localhost:3000` in browser | ❌ No |
-| UiPath AttackAgent running inside Maestro Case | ✅ Yes |
-| Registering / updating `agentwatch-target` in Orchestrator | ✅ Yes |
+| Scenario                                                   | ngrok needed? |
+| ---------------------------------------------------------- | ------------- |
+| `node scripts/demo-attack.mjs` (local script)              | ❌ No         |
+| Opening `http://localhost:3000` in browser                 | ❌ No         |
+| UiPath AttackAgent running inside Maestro Case             | ✅ Yes        |
+| Registering / updating `agentwatch-target` in Orchestrator | ✅ Yes        |
 
 The static ngrok URL used in Orchestrator is `https://geopolitical-bentlee-concentrically.ngrok-free.dev`. Keep this running whenever you trigger the Maestro pipeline from UiPath.
 
