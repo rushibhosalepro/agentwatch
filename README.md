@@ -2,12 +2,14 @@
 
 > **An AI agent that breaks your other AI agents — before the real world does.**
 
+**🚀 [Live Demo](https://agentwatch-silk.vercel.app/)** | **📹 [Watch Demo](https://youtu.be/2CjJKO0EIXk)**
+
 ---
 
 ## 🎬 Demo
 
-- **Live Demo**: run locally — `npm run dev` → [http://localhost:3000](http://localhost:3000)
-- **Video Demo**: https://youtu.be/placeholder ← *update before submission*
+- **Live Demo**: https://agentwatch-silk.vercel.app/
+- **Video Demo**: https://youtu.be/2CjJKO0EIXk
 
 ---
 
@@ -79,7 +81,7 @@ The target agent's tool calls are recorded in real time. `evaluate_breach` scans
                      │
                      ▼
 ┌─────────────────────────────────────────────────────────┐
-│  Live Transcript UI  http://localhost:3000               │
+│  Live Transcript UI  https://agentwatch-silk.vercel.app  │
 │  Real-time attack/response feed · Breach report card    │
 └─────────────────────────────────────────────────────────┘
 ```

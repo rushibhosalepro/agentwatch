@@ -48,7 +48,7 @@ Target Agent (Nemotron 120B / Claude Haiku / GPT-4o)
   Tools: lookup_employee · check_expense_policy · approve_expense · escalate_to_cfo
         │
         ▼
-Live Transcript UI  (http://localhost:3000)
+Live Transcript UI  (https://agentwatch-silk.vercel.app)
 ```
 
 ---
