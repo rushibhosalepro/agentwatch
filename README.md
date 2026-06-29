@@ -22,7 +22,7 @@ A single well-crafted prompt can make an expense approval agent authorise $50,00
 
 ## What It Does
 
-A company deploys an AI agent — in our demo, it's an expense approval agent for Contoso Corp. AgentWatch spins up an **AttackAgent** that fires adversarial messages at it over MCP. The target agent is a real LLM (Claude Haiku) with real tools — it actually decides whether to approve expenses. We watch those decisions, detect policy violations, and produce a breach report.
+A company deploys an AI agent — in our demo, it's an expense approval agent for Contoso Corp. AgentWatch spins up an **AttackAgent** that fires adversarial messages at it over MCP. The target agent is a real LLM with real tools — it actually decides whether to approve expenses. We watch those decisions, detect policy violations, and produce a breach report.
 
 Four attacks. One real AI target. Fully automated.
 
@@ -62,7 +62,7 @@ The target agent's tool calls are recorded in real time. `evaluate_breach` scans
                      │  LangChain agentic loop
                      ▼
 ┌─────────────────────────────────────────────────────────┐
-│  Target Agent  (claude-haiku / gpt-4o)                  │
+│  Target Agent  (Nemotron 120B / Claude Haiku / GPT-4o)   │
 │  System prompt: Expense Approval Agent, Contoso Corp    │
 │                                                         │
 │  Tools:                                                 │
@@ -111,7 +111,7 @@ The target agent's tool calls are recorded in real time. `evaluate_breach` scans
 | MCP Server | `@modelcontextprotocol/sdk` — WebStandard Streamable HTTP |
 | Target Agent | LangChain — `ChatAnthropic` / `ChatOpenAI` with tool binding |
 | Orchestration | UiPath Maestro Case + Agent Builder |
-| AI Models | Claude Haiku 4.5 (target) / Claude Sonnet 4.6 (attacker) |
+| AI Models | Nvidia Nemotron 120B (default target, free) · Claude Haiku 4.5 · GPT-4o / Claude Sonnet 4.6 (attacker) |
 | Protocol | MCP 2024-11-05 — Streamable HTTP transport |
 
 ---
@@ -121,7 +121,7 @@ The target agent's tool calls are recorded in real time. `evaluate_breach` scans
 ### Prerequisites
 
 - Node.js 18+
-- Anthropic API key or OpenAI API key
+- OpenRouter API key (free at [openrouter.ai](https://openrouter.ai)) — or Anthropic/OpenAI key
 
 ### Setup
 
@@ -136,8 +136,11 @@ Open [http://localhost:3000](http://localhost:3000)
 ### Run the Attack Demo
 
 ```bash
-# Run the full 4-vector attack via MCP (requires API key for live LLM target)
-node scripts/demo-attack.mjs sk-ant-your-key-here
+# Uses OPENROUTER_API_KEY from .env.local automatically
+node scripts/demo-attack.mjs
+
+# Or pass any key directly
+node scripts/demo-attack.mjs sk-or-v1-your-openrouter-key
 ```
 
 Watch the live transcript appear at `http://localhost:3000` as attacks run.
@@ -147,7 +150,10 @@ Watch the live transcript appear at `http://localhost:3000` as attacks run.
 Create `.env.local`:
 
 ```env
-# Required for live LLM target agent
+# Free — default target model is nvidia/nemotron-3-super-120b-a12b:free
+OPENROUTER_API_KEY=sk-or-v1-...
+
+# Optional alternatives
 ANTHROPIC_API_KEY=sk-ant-...
 OPENAI_API_KEY=sk-...
 
@@ -185,7 +191,7 @@ agentwatch/
     │   │   ├── api/mcp/route.ts      MCP server (4 tools)
     │   │   └── auth_validation/      UiPath PAT auth endpoint
     │   └── lib/
-    │       ├── target-agent.ts       LangChain agent + mock mode
+    │       ├── target-agent.ts       LangChain agent (OpenRouter / Anthropic / OpenAI)
     │       ├── agent-tools.ts        4 expense tools + approval log
     │       └── sessions.ts           Session store
     ├── scripts/
