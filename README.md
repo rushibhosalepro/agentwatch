@@ -2,7 +2,12 @@
 
 > **An AI agent that breaks your other AI agents — before the real world does.**
 
-**🚀 [Live Demo](http://localhost:3000)** | **📹 [Watch Demo](https://youtu.be/placeholder)**
+---
+
+## 🎬 Demo
+
+- **Live Demo**: run locally — `npm run dev` → [http://localhost:3000](http://localhost:3000)
+- **Video Demo**: https://youtu.be/placeholder ← *update before submission*
 
 ---
 
@@ -78,6 +83,18 @@ The target agent's tool calls are recorded in real time. `evaluate_breach` scans
 │  Real-time attack/response feed · Breach report card    │
 └─────────────────────────────────────────────────────────┘
 ```
+
+---
+
+## Why MCP as the Attack Interface
+
+The easy path is to build a custom HTTP API between the attacker and target. That only tests your specific agent.
+
+The problem with AI agent security is **fragmentation** — LangChain agents, UiPath agents, AutoGen agents, CrewAI agents all speak different protocols. A custom attacker speaks to one and nobody else.
+
+MCP (Model Context Protocol) is the emerging open standard for agent-to-tool and agent-to-agent communication. By building AgentWatch as an MCP server, **any MCP-compatible client becomes a valid attacker** — including UiPath's AttackAgent, Claude Desktop, or a custom script. And by attacking over MCP, **any MCP-capable agent becomes a valid target** — regardless of framework or vendor.
+
+This is why the four tools (`create_session`, `send_message`, `get_transcript`, `evaluate_breach`) are exposed over Streamable HTTP rather than a bespoke API. The protocol is the platform.
 
 ---
 
@@ -187,6 +204,16 @@ v1 (see branch `solution-6`) built the full Maestro orchestration: 6 AI agents (
 
 ---
 
+## What We Learned
+
+- **Making the breach real matters more than perfect orchestration** — v1 had 6 agents and a complete Maestro flow but a conceptual target. v2 has one agent, a real LLM, and a breach you can watch happen. The real thing is what lands.
+- **MCP is the right protocol for agent-to-agent attacks** — open standard, tool-based, framework-agnostic. The attacker and target don't need to be on the same system or even the same vendor.
+- **Free models are capable enough for adversarial testing** — Nvidia Nemotron 120B via OpenRouter correctly uses all four expense tools, follows multi-turn conversation, and responds meaningfully to adversarial pressure. You don't need GPT-4o to run a breach scenario.
+- **UiPath cloud has connectivity constraints** — localtunnel fails at tool discovery (`tools/list` returns error #100); ngrok's static URL solves it. Public endpoints are required for cloud-based orchestrators to call local MCP servers.
+- **AI agents need red teams** — every company deploying agents is testing functionality. Almost none are testing adversarial robustness. This gap is where AgentWatch lives.
+
+---
+
 ## What's Next
 
 - **A2A protocol support** — extend AgentWatch to attack agents over Google's Agent-to-Agent (A2A) protocol alongside MCP, so any agent on any framework (LangChain, AutoGen, CrewAI, UiPath) can be a target without custom adapters
@@ -224,3 +251,9 @@ agentwatch/
 [UiPath AgentHack 2026](https://uipath-agenthack.devpost.com/) — Track 1: Maestro Case
 
 _Built to make AI agent adversarial testing as routine as unit testing._
+
+---
+
+## License
+
+MIT License — see [LICENSE](./LICENSE)
