@@ -171,11 +171,11 @@ v1 (see branch `solution-6`) built the full Maestro orchestration: 6 AI agents (
 
 ## What's Next
 
-- **Deploy to Vercel** — gives a permanent public URL so the MCP connection stays live without running ngrok locally. The 7-stage Maestro pipeline runs end-to-end today over ngrok; Vercel makes that permanent without local infrastructure
-- **Expand the Maestro pipeline** — add automated remediation suggestions from DamageAssessmentAgent and a Verify stage that re-runs attacks after remediation to confirm fixes held
+- **A2A protocol support** — extend AgentWatch to attack agents over Google's Agent-to-Agent (A2A) protocol alongside MCP, so any agent on any framework (LangChain, AutoGen, CrewAI, UiPath) can be a target without custom adapters
+- **Multi-agent attack chains** — one AttackAgent coordinating a swarm of specialized sub-agents (InjectionAgent, SpoofingAgent, DriftAgent) to run concurrent vectors and find compound vulnerabilities that single-vector attacks miss
+- **Cross-agent trust testing** — probe what happens when two agents collaborate: does Agent A blindly trust instructions from Agent B? Can a compromised peer propagate a breach through a multi-agent pipeline?
 - **Expand attack library** — data exfiltration, roleplay jailbreak, boundary erosion, emotional manipulation vectors
-- **Live agent registry** — auto-discover deployed agents from UiPath Orchestrator as attack targets
-- **CI/CD integration** — run AgentWatch before any agent update goes to production
+- **CI/CD integration** — run AgentWatch as a gate before any agent update goes to production
 - **Compliance reports** — SOC 2, NIST AI RMF formatted outputs from the breach audit trail
 
 ---
