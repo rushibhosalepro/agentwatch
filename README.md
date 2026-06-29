@@ -145,6 +145,24 @@ node scripts/demo-attack.mjs sk-or-v1-your-openrouter-key
 
 Watch the live transcript appear at `http://localhost:3000` as attacks run.
 
+### ngrok — When You Need It
+
+AgentWatch exposes its MCP server at `localhost:3000/api/mcp`. UiPath Orchestrator runs in the cloud and **cannot reach localhost**, so ngrok is required whenever UiPath is the one making MCP calls.
+
+| Scenario | ngrok needed? |
+|---|---|
+| `node scripts/demo-attack.mjs` (local script) | ❌ No |
+| Opening `http://localhost:3000` in browser | ❌ No |
+| UiPath AttackAgent running inside Maestro Case | ✅ Yes |
+| Registering / updating `agentwatch-target` in Orchestrator | ✅ Yes |
+
+The static ngrok URL used in Orchestrator is `https://geopolitical-bentlee-concentrically.ngrok-free.dev`. Keep this running whenever you trigger the Maestro pipeline from UiPath.
+
+```bash
+# Start ngrok (must match the URL registered in Orchestrator)
+ngrok http 3000
+```
+
 ### Environment Variables
 
 Create `.env.local`:
