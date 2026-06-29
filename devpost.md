@@ -111,12 +111,13 @@ The hardest problem we hit was infrastructure: UiPath Orchestrator's cloud serve
 
 ## 🔮 What's Next
 
-1. **A2A protocol support** — extend AgentWatch to attack agents over Google's Agent-to-Agent (A2A) protocol alongside MCP. Any agent on any framework — LangChain, AutoGen, CrewAI, UiPath — becomes a valid target without custom adapters. MCP and A2A together cover the two dominant agent communication standards.
-2. **Multi-agent attack chains** — one AttackAgent coordinating a swarm of specialized sub-agents (InjectionAgent, SpoofingAgent, DriftAgent) to run concurrent attack vectors and find compound vulnerabilities that single-vector attacks miss.
-3. **Cross-agent trust testing** — probe what happens when two agents collaborate: does Agent A blindly trust instructions from Agent B? Can a compromised peer propagate a breach through a multi-agent pipeline? This is the next frontier of agent security.
-4. **Expand attack library** — data exfiltration, roleplay jailbreak, boundary erosion, emotional manipulation — each as a named MCP tool argument
-5. **CI/CD integration** — run AgentWatch as a gate before any agent update goes to production
-6. **Compliance reports** — SOC 2, NIST AI RMF formatted outputs from the breach audit trail
+1. **Live agent communication visualizer** — real-time graph showing messages flowing between AttackAgent and target agent during an active attack: who said what, which tools were called, where the boundary broke — so security teams can watch the breach happen step by step instead of reading a transcript after the fact.
+2. **Automated breach remediation** — when a breach is detected, the RemediationAgent analyzes the violation and produces concrete fixes: revised system prompt wording that closes the loophole, tighter tool-call guardrails, input validation rules — developers get a patch, not just a report.
+3. **A2A protocol support** — extend AgentWatch to attack agents over Google's Agent-to-Agent (A2A) protocol alongside MCP. Any agent on any framework — LangChain, AutoGen, CrewAI, UiPath — becomes a valid target without custom adapters. MCP and A2A together cover the two dominant agent communication standards.
+4. **Multi-agent attack chains** — one AttackAgent coordinating a swarm of specialized sub-agents (InjectionAgent, SpoofingAgent, DriftAgent) to run concurrent attack vectors and find compound vulnerabilities that single-vector attacks miss.
+5. **Cross-agent trust testing** — probe what happens when two agents collaborate: does Agent A blindly trust instructions from Agent B? Can a compromised peer propagate a breach through a multi-agent pipeline? This is the next frontier of agent security.
+6. **CI/CD integration** — run AgentWatch as a gate before any agent update goes to production
+7. **Compliance reports** — SOC 2, NIST AI RMF formatted outputs from the breach audit trail
 
 ---
 

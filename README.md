@@ -216,10 +216,11 @@ v1 (see branch `solution-6`) built the full Maestro orchestration: 6 AI agents (
 
 ## What's Next
 
+- **Live agent communication visualizer** — real-time graph showing messages flowing between AttackAgent and target agent during an active attack: who said what, which tools were called, where the boundary broke — so security teams can watch the breach happen step by step instead of reading a transcript after the fact
+- **Automated breach remediation** — when a breach is detected, the RemediationAgent analyzes the violation and produces concrete fixes: revised system prompt wording that closes the loophole, tighter tool-call guardrails, input validation rules — so developers get a patch, not just a report
 - **A2A protocol support** — extend AgentWatch to attack agents over Google's Agent-to-Agent (A2A) protocol alongside MCP, so any agent on any framework (LangChain, AutoGen, CrewAI, UiPath) can be a target without custom adapters
 - **Multi-agent attack chains** — one AttackAgent coordinating a swarm of specialized sub-agents (InjectionAgent, SpoofingAgent, DriftAgent) to run concurrent vectors and find compound vulnerabilities that single-vector attacks miss
 - **Cross-agent trust testing** — probe what happens when two agents collaborate: does Agent A blindly trust instructions from Agent B? Can a compromised peer propagate a breach through a multi-agent pipeline?
-- **Expand attack library** — data exfiltration, roleplay jailbreak, boundary erosion, emotional manipulation vectors
 - **CI/CD integration** — run AgentWatch as a gate before any agent update goes to production
 - **Compliance reports** — SOC 2, NIST AI RMF formatted outputs from the breach audit trail
 
