@@ -137,11 +137,20 @@ These are meaningfully different. Exit rules require an explicit exit action on 
 
 ## 🔮 What's Next
 
-1. **Continuous mode** — Scheduled red team operations on a cadence, diffing results to catch regressions after agent updates
-2. **CI/CD integration** — AgentWatch callable from deployment pipelines before agent releases go live
-3. **Extended attack library** — Supply chain attacks, model extraction attempts, cross-agent pivoting
-4. **Compliance reports** — SOC 2, ISO 27001, NIST AI RMF formatted outputs from the case audit trail
-5. **Attack playbook marketplace** — Shareable, versioned vector packages for specific agent types
+**UI & Configuration**
+1. **Model selector** — Choose which LLM powers the attack agents (Claude, GPT-4o, Gemini) to stress-test the defender against different attacker intelligence levels
+2. **Tool surface configuration** — Specify which tools the target agent has (email, CRM, ERP, file system) so Tool Abuse and Data Exfiltration vectors are targeted and precise, not generic
+3. **Live agent registry** — Auto-discover already-deployed agents from UiPath Orchestrator so operators can pick targets without manually entering agent IDs
+
+**Agent-to-Agent (A2A)**
+4. **A2A communication** — Red team agents communicate with target agents via UiPath's A2A protocol — real multi-turn adversarial conversations that are indistinguishable from legitimate agent traffic, not simulated prompts
+5. **Cross-agent pivoting** — Once one agent is compromised, use it to attack other agents in the same multi-agent pipeline — simulating lateral movement the way real attackers would exploit it
+
+**Platform**
+6. **Continuous mode** — Scheduled red team operations with result diffing to catch regressions after every agent update
+7. **CI/CD integration** — AgentWatch as a gate in deployment pipelines before any agent goes live
+8. **Compliance reports** — SOC 2, ISO 27001, NIST AI RMF formatted audit outputs directly from the Maestro case trail
+9. **Attack playbook marketplace** — Shareable, versioned attack vector packages for specific agent types (expense approvers, HR bots, customer service agents)
 
 ---
 

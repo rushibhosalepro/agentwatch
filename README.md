@@ -226,11 +226,20 @@ Each stage's outcome drives the next stage's entry. The case is self-directing.
 
 ## 🔮 What's Next
 
-1. **Continuous mode** — Schedule red team operations on a cadence and diff results over time to catch agent regressions after updates
-2. **CI/CD integration** — AgentWatch callable from deployment pipelines before agent releases go live
-3. **Extended attack library** — Supply chain attacks, model extraction attempts, cross-agent pivoting
-4. **Compliance reports** — SOC 2, ISO 27001, NIST AI RMF formatted outputs from the case audit trail
-5. **Attack playbook marketplace** — Shareable, versioned vector packages for specific agent types (expense approvers, HR bots, customer service agents)
+**UI & Configuration**
+1. **Model selector** — Choose which LLM powers the attack agents (Claude, GPT-4o, Gemini) to test how the target agent holds up against different attacker models
+2. **Tool surface configuration** — Specify which tools the target agent has (email, CRM, ERP, file system) so the Attack Loop fires Tool Abuse and Data Exfiltration vectors with real precision
+3. **Live agent registry** — Auto-discover already-deployed agents from UiPath Orchestrator and pick them as targets without entering IDs manually
+
+**Agent-to-Agent (A2A)**
+4. **A2A communication** — Red team agents talk directly to target agents via UiPath's A2A protocol — real multi-turn adversarial conversations, indistinguishable from legitimate agent traffic
+5. **Cross-agent pivoting** — Use one compromised agent to attack others in the same pipeline, simulating lateral movement across a multi-agent system
+
+**Platform**
+6. **Continuous mode** — Scheduled operations on a cadence with result diffing to catch regressions after agent updates
+7. **CI/CD integration** — AgentWatch callable from deployment pipelines before agents go live
+8. **Compliance reports** — SOC 2, ISO 27001, NIST AI RMF formatted outputs from the case audit trail
+9. **Attack playbook marketplace** — Shareable, versioned vector packages for specific agent types
 
 ---
 
